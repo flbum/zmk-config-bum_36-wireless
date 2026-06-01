@@ -10,6 +10,12 @@
  * 10-14 A-G   15-19 H-;
  * 20-24 Z-B   25-29 N-/
  *     30-33 L thumb (col 1-4)   34-37 R thumb
+ *
+ * Encoders (see ZMK docs):
+ *   - ROTATION: A/B wires to GPIO P1.15 + P0.02 (pro_micro 18/19), set in sensor-bindings.
+ *   - PRESS: matrix keys (left col 4 = TG layer 2; right thumb 1 = mute), NOT the GPIO encoder.
+ *
+ * ZMK Studio cannot edit encoder rotation yet; change sensor-bindings in this file.
  */
 
 #include <behaviors.dtsi>
@@ -100,6 +106,7 @@
     &kp LALT        &mt LGUI TAB    &lt 1 SPACE     &tog 2          &kp C_MUTE      &lt 2 SPACE     &mt LCTRL BSPC  &mt RSHFT RET
             >;
 
+            /* Vial: left TAB/MB1, right vol up/down — edit here, not in Studio. */
             sensor-bindings = <&enc_base_l &inc_dec_kp C_VOL_UP C_VOL_DN>;
         };
 
