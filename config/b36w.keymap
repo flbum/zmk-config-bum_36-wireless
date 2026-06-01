@@ -2,6 +2,14 @@
  * Copyright (c) 2026
  *
  * SPDX-License-Identifier: MIT
+ *
+ * Ported from bum_36/vial layout.vil
+ *
+ * Key positions (for combos):
+ *  0- 4 Q-T    5- 9 Y-P
+ * 10-14 A-G   15-19 H-;
+ * 20-24 Z-B   25-29 N-/
+ *     30-33 L thumb (col 1-4)   34-37 R thumb
  */
 
 #include <behaviors.dtsi>
@@ -11,6 +19,58 @@
 #include <dt-bindings/zmk/outputs.h>
 
 / {
+    combos {
+        compatible = "zmk,combos";
+
+        combo_as_bslash {
+            timeout-ms = <50>;
+            key-positions = <10 11>;
+            bindings = <&kp LS(BSLH)>;
+        };
+
+        combo_rt_9 {
+            timeout-ms = <50>;
+            key-positions = <3 4>;
+            bindings = <&kp LPAR>;
+        };
+
+        combo_fg_lbrk {
+            timeout-ms = <50>;
+            key-positions = <13 14>;
+            bindings = <&kp LBKT>;
+        };
+
+        combo_vb_lbkt {
+            timeout-ms = <50>;
+            key-positions = <23 24>;
+            bindings = <&kp LS(LBKT)>;
+        };
+
+        combo_yu_0 {
+            timeout-ms = <50>;
+            key-positions = <5 6>;
+            bindings = <&kp RPAR>;
+        };
+
+        combo_hj_rbrk {
+            timeout-ms = <50>;
+            key-positions = <15 16>;
+            bindings = <&kp RBKT>;
+        };
+
+        combo_nm_rbkt {
+            timeout-ms = <50>;
+            key-positions = <25 26>;
+            bindings = <&kp LS(RBKT)>;
+        };
+
+        combo_jk_esc {
+            timeout-ms = <50>;
+            key-positions = <16 17>;
+            bindings = <&kp ESC>;
+        };
+    };
+
     conditional_layers {
         compatible = "zmk,conditional-layers";
         adjust_layer {
@@ -20,10 +80,10 @@
     };
 
     behaviors {
-        scroll_encoder: scroll_encoder {
+        enc_base_l: enc_base_l {
             compatible = "zmk,behavior-sensor-rotate";
             #sensor-binding-cells = <0>;
-            bindings = <&msc SCRL_UP>, <&msc SCRL_DOWN>;
+            bindings = <&msc MB1>, <&kp TAB>;
         };
     };
 
@@ -32,24 +92,23 @@
 
         default_layer {
             display-name = "Base";
-// Left row 4: thumb col 1-3 + encoder push col 4. Rotary encoder is separate (GPIO).
             bindings = <
-    &kp Q &kp W &kp E &kp R &kp T   &kp Y &kp U &kp I &kp O &kp P
-    &kp A &kp S &kp D &kp F &kp G   &kp H &kp J &kp K &kp L &kp SEMI
-    &kp Z &kp X &kp C &kp V &kp B   &kp N &kp M &kp COMMA &kp DOT &kp FSLH
-    &kp ESC &kp LGUI &mo 1 &kp SPACE   &kp RET &mo 2 &kp BSPC &kp DEL
+    &kp Q       &kp W       &kp E       &kp R       &kp T         &kp Y       &kp U       &kp I       &kp O       &kp P
+    &kp A       &kp S       &kp D       &kp F       &kp G         &kp H       &kp J       &kp K       &kp L       &kp SEMI
+    &mt LS Z    &mt LA X    &mt LC C    &mt LG V    &kp B         &kp N       &mt RG M    &mt RC COMMA &mt RA DOT &mt RS FSLH
+    &kp LALT    &mt LG TAB  &lt 1 SPACE &tog 2      &kp C_MUTE    &lt 2 SPACE &mt LC BSPC &mt RS RET
             >;
 
-            sensor-bindings = <&scroll_encoder &inc_dec_kp C_VOL_DN C_VOL_UP>;
+            sensor-bindings = <&enc_base_l &inc_dec_kp C_VOL_UP C_VOL_DN>;
         };
 
         lower_layer {
             display-name = "Lower";
             bindings = <
-    &kp N1 &kp N2 &kp N3 &kp N4 &kp N5   &kp N6 &kp N7 &kp N8 &kp N9 &kp N0
-    &kp TAB &trans &kp UP &trans &kp PG_UP   &kp HOME &kp LEFT &kp DOWN &kp RIGHT &kp END
-    &kp LSHFT &kp LEFT &kp DOWN &kp RIGHT &kp PG_DN   &trans &trans &trans &trans &trans
-    &trans &trans &trans &kp ESC   &kp DEL &trans &trans &trans
+    &kp LS(N1)  &kp LS(N2)  &kp LS(N8)  &kp GRAVE   &kp LS(GRAVE)   &kp N7      &kp N8      &kp N9      &kp LS(EQUAL) &kp SQT
+    &kp LS(N3)  &kp SQT     &kp LS(SQT) &kp MINUS   &kp EQUAL       &kp N4      &kp N5      &kp N6      &kp MINUS     &kp LS(SEMI)
+    &kp LS(MINUS) &kp LS(N4) &kp LS(N5) &kp LS(N6) &kp LS(N7)      &kp N1      &kp N2      &kp N3      &kp BSLH      &kp LC(DEL)
+    &trans      &trans      &trans      &trans      &trans          &kp RET     &kp N0      &kp DOT
             >;
 
             sensor-bindings = <&inc_dec_kp LEFT RIGHT &inc_dec_kp C_PREV C_NEXT>;
@@ -58,10 +117,10 @@
         raise_layer {
             display-name = "Raise";
             bindings = <
-    &kp EXCL &kp AT &kp HASH &kp DLLR &kp PRCNT   &kp CARET &kp AMPS &kp ASTRK &kp LPAR &kp RPAR
-    &kp F1 &kp F2 &kp F3 &kp F4 &kp F5   &kp MINUS &kp EQUAL &kp LBKT &kp RBKT &kp BSLH
-    &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &kp F9 &kp F10   &kp UNDER &kp PLUS &kp LBRC &kp RBRC &kp PIPE
-    &trans &trans &trans &kp TAB   &kp SPACE &trans &trans &trans
+    &kp N1      &kp N2      &kp N3      &kp N4      &kp N5          &kp LC(LS(TAB)) &kp LG(LEFT) &kp LG(RIGHT) &kp LC(TAB) &kp LS(LG(N4))
+    &kp CAPS    &msc SCRL_LEFT &msc SCRL_DOWN &msc SCRL_UP &msc SCRL_RIGHT   &kp LEFT    &kp UP      &kp DOWN    &kp RIGHT   &kp LS(LG(N5))
+    &kp LSHFT   &none       &kp BSLH    &msc MB2    &msc MB1        &mmv MOVE_LEFT &mmv MOVE_DOWN &mmv MOVE_UP &mmv MOVE_RIGHT &kp LG(V)
+    &kp DEL     &trans      &trans      &trans      &trans          &trans      &trans      &kp BSPC    &trans
             >;
 
             sensor-bindings = <&inc_dec_kp DOWN UP &inc_dec_kp C_BRI_DEC C_BRI_INC>;
@@ -70,10 +129,10 @@
         adjust_layer {
             display-name = "Adjust";
             bindings = <
-    &bootloader &studio_unlock &trans &trans &trans   &trans &trans &trans &trans &trans
-    &trans &trans &trans &trans &trans   &trans &kp C_PREV &kp C_PP &kp C_NEXT &trans
-    &trans &trans &trans &trans &trans   &trans &kp C_VOL_DN &kp C_MUTE &kp C_VOL_UP &trans
-    &trans &trans &trans &studio_unlock   &out OUT_USB &trans &trans &trans
+    &kp F1      &kp F2      &kp F3      &kp F4      &kp F5          &kp N1      &kp N2      &kp N3      &kp N4      &kp N5
+    &kp F6      &kp F7      &kp F8      &kp F9      &kp F10         &kp C_MUTE  &kp C_VOL_DN &kp C_VOL_UP &kp C_PP    &none
+    &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &none   &none           &none       &kp C_PREV  &kp C_NEXT  &kp C_STOP  &none
+    &trans      &trans      &trans      &studio_unlock &trans      &trans      &trans      &out OUT_USB
             >;
 
             sensor-bindings = <&inc_dec_kp LEFT RIGHT &inc_dec_kp C_VOL_DN C_VOL_UP>;
