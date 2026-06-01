@@ -86,14 +86,6 @@
         };
     };
 
-    behaviors {
-        enc_base_l: enc_base_l {
-            compatible = "zmk,behavior-sensor-rotate";
-            #sensor-binding-cells = <0>;
-            bindings = <&msc MB1>, <&kp TAB>;
-        };
-    };
-
     keymap {
         compatible = "zmk,keymap";
 
@@ -106,8 +98,8 @@
     &kp LALT        &mt LGUI TAB    &lt 1 SPACE     &tog 2          &kp C_MUTE      &lt 2 SPACE     &mt LCTRL BSPC  &mt RSHFT RET
             >;
 
-            /* Vial: left TAB/MB1, right vol up/down — edit here, not in Studio. */
-            sensor-bindings = <&enc_base_l &inc_dec_kp C_VOL_UP C_VOL_DN>;
+            /* Left: Tab / Shift+Tab (swap order if direction feels reversed). Right: volume. */
+            sensor-bindings = <&inc_dec_kp TAB LS(TAB) &inc_dec_kp C_VOL_UP C_VOL_DN>;
         };
 
         lower_layer {
